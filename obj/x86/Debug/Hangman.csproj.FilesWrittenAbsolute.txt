@@ -1,0 +1,5 @@
+/Users/katienoland/Documents/GitHub/Hangman/obj/x86/Debug/.NETFramework,Version=v4.0.AssemblyAttribute.cs
+/Users/katienoland/Documents/GitHub/Hangman/bin/Debug/Hangman.exe.mdb
+/Users/katienoland/Documents/GitHub/Hangman/bin/Debug/Hangman.exe
+/Users/katienoland/Documents/GitHub/Hangman/obj/x86/Debug/Hangman.exe
+/Users/katienoland/Documents/GitHub/Hangman/obj/x86/Debug/Hangman.exe.mdb
