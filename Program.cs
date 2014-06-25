@@ -11,10 +11,12 @@ namespace Hangman
 		public static StringBuilder display=new StringBuilder();
 		public static string guessesTrue = "";
 		public static string guessesFalse = "";
+		public static int guessesLeft = 10;
 	}
 
 	class MainClass
 	{
+	
 		public static void Main (string[] args)
 		{
 
@@ -32,22 +34,22 @@ namespace Hangman
 //			string display="";
 //			string guessesTrue = "";
 //			string guessesFalse = "";
-			int guessesLeft = 10;
+
 			string guess = "";
-			List <string> wordList = new List <string> (){"apple", "burrito", "xenophobia", "deoxyribonucleic acid"};
+			List <string> wordList = new List <string> (){"apple", "burrito", "xenophobia", "deoxyribonucleic acid", "monster", "technology"};
 			//initialize word
 			Random randpick = new Random();
-			variables.word = wordList[randpick.Next (0,3)];
+			variables.word = wordList[randpick.Next (0,4)];
 			//initialize display with dashes
 			for(int i = 0;i<variables.word.Length;i++){
 				variables.display.Append('_');
 			}
 			//while loop outputs user progress and accepts a new guess
-			while (guessesLeft > 0) {
+			while (variables.guessesLeft > 0) {
 				Console.WriteLine (variables.display);
-				Console.WriteLine ("You have "+guessesLeft+" guesses left: ");
-				Console.WriteLine ("Letters guessed "+variables.guessesTrue+variables.guessesFalse);
-				Console.WriteLine ("Guess a letter or "+variables.word.Length+" digit word");
+				Console.WriteLine ("You have "+variables.guessesLeft+" guesses left: ");
+				Console.WriteLine ("Letters guessed "+ variables.guessesFalse+variables.guessesTrue);
+				Console.WriteLine ("Guess a letter or "+variables.word.Length+" character word");
 				guess = Console.ReadLine ();
 				//check if you need charguess or wordguess
 				if(guess.Length==1){
@@ -59,7 +61,7 @@ namespace Hangman
 					wordguess (guess);
 				}
 				//decrement guesses left every time you go through guessing loop
-				guessesLeft--;
+				//guessesLeft--;
 				//check if guess has caused victory
 				if(variables.display.ToString()==variables.word){
 					Console.WriteLine ("You win!");
@@ -74,13 +76,21 @@ namespace Hangman
 		/// </summary>
 		/// <param name="guess">Guessed character.</param>
 		static void CharGuess(string guess){
+			bool istrue=false;
 			char guessChar = Convert.ToChar (guess);
 			for(int j=0; j<variables.word.Length;j++){
-				if(guessChar == variables.word[j]){
+				if (guessChar == variables.word [j]) {
 					variables.guessesTrue += guessChar;
 					variables.display [j] = guessChar;
-				}
+					istrue = true;
+
+				} 
 			}
+			if (!istrue) {
+				variables.guessesFalse += guessChar;
+				variables.guessesLeft--;
+			}
+
 		}
 
 		/// <summary>
@@ -88,10 +98,14 @@ namespace Hangman
 		/// </summary>
 		/// <param name="guess">Guessed word.</param>
 		static void wordguess(string guess){
+			bool istrue=false;
 			if (guess == variables.word) {
 				variables.display.Length = 0;
-				variables.display.Append(guess);
-				}
+				variables.display.Append (guess);
+			} 
+			if(!istrue){
+				variables.guessesFalse += guess;}
+				variables.guessesLeft--;
 		}
 
 	}
