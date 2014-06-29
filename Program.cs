@@ -5,10 +5,11 @@ using System.Text;
 namespace Hangman
 {
 	class variables{
-		//hold variables in separate class so they can be accessed anywhere
+		//hold variables in separate class for global access
 		public static string word="";
-		//use stringbuilder so that you can change individual characters in display
+		//create stringbuilder to enable modification of individual characters in display
 		public static StringBuilder display=new StringBuilder();
+		//hold running list of guesses
 		public static string guessesTrue = "";
 		public static string guessesFalse = "";
 		public static int guessesLeft = 10;
@@ -19,39 +20,41 @@ namespace Hangman
 	
 		public static void Main (string[] args)
 		{
-
 			Hangman();
 		}
 
+		/// <summary>
+		/// Hangman game that relies on charGuess and wordGuess functions to test if user has correctly guessed word
+		/// </summary>
 		static void Hangman(){
-			//introduce game
+			//variable to hold guess given by user, taken as input by charGuess and wordGuess
+			string guess = "";
+			//introduce game to player
 			Console.WriteLine ("What's your name?");
 			string name = Console.ReadLine();
 			Console.WriteLine ("Hello, " + name);
 			Console.WriteLine ("Guess a letter or the full word. You have 10 tries.");
-			//create strings to hold computer's word, string to be displayed, and guessed made
-//			string word="";
-//			string display="";
-//			string guessesTrue = "";
-//			string guessesFalse = "";
-
-			string guess = "";
+	
+			//list of potential words
 			List <string> wordList = new List <string> (){"apple", "burrito", "xenophobia", "deoxyribonucleic acid", "monster", "technology"};
-			//initialize word
+			//have computer randomaly select word via index
 			Random randpick = new Random();
 			variables.word = wordList[randpick.Next (0,4)];
 			//initialize display with dashes
 			for(int i = 0;i<variables.word.Length;i++){
 				variables.display.Append('_');
 			}
-			//while loop outputs user progress and accepts a new guess
+			//while loop outputs user progress and accepts a new guess as long as user still has guesses left
 			while (variables.guessesLeft > 0) {
+				//output for user
 				Console.WriteLine (variables.display);
 				Console.WriteLine ("You have "+variables.guessesLeft+" guesses left: ");
 				Console.WriteLine ("Letters guessed "+ variables.guessesFalse+variables.guessesTrue);
 				Console.WriteLine ("Guess a letter or "+variables.word.Length+" character word");
+				//read in new guess
 				guess = Console.ReadLine ();
-				//check if you need charguess or wordguess
+
+				//check guess length and call either charGuess or wordGuess
 				if(guess.Length==1){
 					//call charguess function
 					CharGuess (guess);
@@ -60,8 +63,6 @@ namespace Hangman
 					//call wordguess function
 					wordguess (guess);
 				}
-				//decrement guesses left every time you go through guessing loop
-				//guessesLeft--;
 				//check if guess has caused victory
 				if(variables.display.ToString()==variables.word){
 					Console.WriteLine ("You win!");
@@ -72,20 +73,24 @@ namespace Hangman
 			Console.WriteLine ("You lose!");
 		}
 		/// <summary>
-		/// Updates display string and t/f guess strings
+		/// Updates display string and true and false guess strings after user guesses a character
 		/// </summary>
-		/// <param name="guess">Guessed character.</param>
+		/// <param name="guess">Character guessed.</param>
 		static void CharGuess(string guess){
+			//boolean becomes true if char matches one of the letters in the word
 			bool istrue=false;
+			//guess is read in as a string by Hangman function, covert it to character for comparison
 			char guessChar = Convert.ToChar (guess);
+			//loop through all characters in computer's chosen word string to test them again user's guess
 			for(int j=0; j<variables.word.Length;j++){
+				//if a match is found, set bool to true but continue loop in case there are multiple instances of the character
 				if (guessChar == variables.word [j]) {
 					variables.guessesTrue += guessChar;
 					variables.display [j] = guessChar;
 					istrue = true;
-
 				} 
 			}
+			//if no match is ever found after all looping, decrement guesses left and add guess to false list
 			if (!istrue) {
 				variables.guessesFalse += guessChar;
 				variables.guessesLeft--;
@@ -94,19 +99,21 @@ namespace Hangman
 		}
 
 		/// <summary>
-		/// Updates display string and t/f guess strings
+		/// Updates display string and true and false guess strings for a full word guess
 		/// </summary>
-		/// <param name="guess">Guessed word.</param>
+		/// <param name="guess">Guessed word</param>
 		static void wordguess(string guess){
+			//bool becomes true if word is correct
 			bool istrue=false;
+			//change display to show full word if guess is correct
 			if (guess == variables.word) {
 				variables.display.Length = 0;
 				variables.display.Append (guess);
 			} 
+			//decrement guesses left and add guess to false list
 			if(!istrue){
 				variables.guessesFalse += guess;}
 				variables.guessesLeft--;
 		}
-
 	}
 }
